@@ -13,13 +13,13 @@ defmodule Sonyflakex.IpAddressTest do
 
   test "returns first private IP address" do
     mock_list_ips = fn ->
-      {:ok, [
-          {{127,0, 0, 1}, {}, {}},
-          {{225,16, 10, 17}, {}, {}},
-          {{192,168, 0, 19}, {}, {}},
-          {{10,3, 6, 2}, {}, {}},
-        ]
-      }
+      {:ok,
+       [
+         {{127, 0, 0, 1}, {}, {}},
+         {{225, 16, 10, 17}, {}, {}},
+         {{192, 168, 0, 19}, {}, {}},
+         {{10, 3, 6, 2}, {}, {}}
+       ]}
     end
 
     assert IpAddress.first_private_ipv4(mock_list_ips) == {192, 168, 0, 19}

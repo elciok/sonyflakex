@@ -24,6 +24,7 @@ defmodule SonyflakexTest do
   # helper function to check list order
   def is_ascending([]), do: true
   def is_ascending([_]), do: true
+
   def is_ascending([head1, head2 | tail]) do
     if head1 >= head2 do
       false

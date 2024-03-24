@@ -42,6 +42,7 @@ defmodule Sonyflakex do
     case Generator.next_id(state) do
       {:ok, new_id, new_state} ->
         {:reply, new_id, new_state}
+
       {:error, :overflow} ->
         # wait until next timestamp that will reset sequence
         current_time = Time.current_elapsed_time(start_time)

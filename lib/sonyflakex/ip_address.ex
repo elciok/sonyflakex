@@ -1,5 +1,4 @@
 defmodule Sonyflakex.IpAddress do
-
   def is_private_ipv4({10, _, _, _} = _ip), do: true
   def is_private_ipv4({192, 168, _, _} = _ip), do: true
   def is_private_ipv4({172, x, _, _} = _ip) when x >= 16 and x < 32, do: true

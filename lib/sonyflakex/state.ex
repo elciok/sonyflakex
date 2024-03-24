@@ -17,16 +17,21 @@ defmodule Sonyflakex.State do
     create_state(start_time, 0, machine_id, sequence)
   end
 
-  def create_state(start_time, elapsed_time, machine_id, sequence), do: {start_time, elapsed_time, machine_id, sequence}
+  def create_state(start_time, elapsed_time, machine_id, sequence),
+    do: {start_time, elapsed_time, machine_id, sequence}
 
   def to_id({_start_time, elapsed_time, machine_id, sequence} = _state) do
-    concatenated = <<elapsed_time::size(@bits_time), sequence::size(@bits_sequence), machine_id::size(@bits_machine_id)>>
+    concatenated =
+      <<elapsed_time::size(@bits_time), sequence::size(@bits_sequence),
+        machine_id::size(@bits_machine_id)>>
+
     <<result::integer-size(63)>> = concatenated
     result
   end
 
   def increment_sequence({_start_time, _elapsed_time, _machine_id, sequence} = _state) do
     new_sequence = sequence + 1 &&& @mask_sequence
+
     if new_sequence == 0 do
       {:error, :overflow}
     else
