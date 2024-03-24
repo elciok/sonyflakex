@@ -1,5 +1,6 @@
 defmodule Sonyflakex.TimeTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
+  doctest Sonyflakex.Time
 
   alias Sonyflakex.Time
 
@@ -19,7 +20,13 @@ defmodule Sonyflakex.TimeTest do
     assert Time.current_elapsed_time(start_time, utc_now) == 600
   end
 
-  test "compute milliseconds to sleep from current time until next unit of 10 ms after current elapsed time" do
-    assert Time.time_until_next_timestamp(120, 100) == 210
+  describe "time_until_next_timestamp/3" do
+    test "compute milliseconds to sleep from current time until next unit of 10 ms after current elapsed time" do
+      assert Time.time_until_next_timestamp(0, 120, 1000) == 210
+    end
+
+    test "returns zero if next elapsed time happens before current time" do
+      assert Time.time_until_next_timestamp(1, 10, 1000) == 0
+    end
   end
 end

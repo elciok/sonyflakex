@@ -1,5 +1,5 @@
 defmodule Sonyflakex.GeneratorTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
 
   alias Sonyflakex.Generator
   alias Sonyflakex.State

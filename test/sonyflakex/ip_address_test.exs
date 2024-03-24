@@ -1,5 +1,6 @@
 defmodule Sonyflakex.IpAddressTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
+  doctest Sonyflakex.IpAddress
 
   alias Sonyflakex.IpAddress
 

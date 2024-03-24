@@ -1,24 +1,10 @@
 defmodule Sonyflakex do
-  @moduledoc """
-  Documentation for `Sonyflakex`.
-  """
+  @external_resource "README.md"
+  @moduledoc File.read!("README.md")
 
   use GenServer
 
   alias Sonyflakex.{State, Generator, Time}
-
-  # @doc """
-  # Hello world.
-
-  # ## Examples
-
-  #     iex> Sonyflakex.hello()
-  #     :world
-
-  # """
-  # def hello do
-  #   :world
-  # end
 
   def start_link(args) do
     GenServer.start_link(
@@ -45,8 +31,8 @@ defmodule Sonyflakex do
 
       {:error, :overflow} ->
         # wait until next timestamp that will reset sequence
-        current_time = Time.current_elapsed_time(start_time)
-        wait_ms = Time.time_until_next_timestamp(elapsed_time, current_time)
+        current_time = DateTime.to_unix(DateTime.utc_now(), :millisecond)
+        wait_ms = Time.time_until_next_timestamp(start_time, elapsed_time, current_time)
         if wait_ms > 0, do: Process.sleep(wait_ms)
 
         # try again after waking up
@@ -55,6 +41,13 @@ defmodule Sonyflakex do
     end
   end
 
+  # public interface
+
+  @doc ~S"""
+  Get new ID from running Sonyflake process.
+
+  Returns: New integer ID.
+  """
   def next_id() do
     GenServer.call(__MODULE__, :next_id)
   end

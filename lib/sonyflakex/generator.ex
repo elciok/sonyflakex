@@ -1,7 +1,27 @@
 defmodule Sonyflakex.Generator do
+  @moduledoc """
+  Logic to generate new IDs.
+  """
+
   import Sonyflakex.Time
   import Sonyflakex.State
 
+  @doc ~S"""
+  Returns new ID based on current state.
+
+  Args:
+    - `state`: Generator state.
+    - `utc_now`: (Optional) Function that returns current datetime
+    using the same contract as DateTime.utc_now/0. It is used to
+    mock datetime generation in tests.
+
+  Returns:
+    - `{:ok, new_id, new_state}`: new ID value and state after generating the ID.
+
+    - `{:error, :overflow}`: if incrementing the sequence would overflow
+    the 8 bit field then it returns an error response.
+
+  """
   def next_id(
         {start_time, elapsed_time, machine_id, _sequence} = state,
         utc_now \\ &DateTime.utc_now/0

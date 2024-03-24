@@ -4,8 +4,6 @@
 
 **TODO: Configuration options to set start_time and machine_id**
 
-**TODO: Generate documentation**
-
 **TODO: Submit to hex.pm**
 
 Sonyflake is a distributed unique ID generator inspired by [Twitter's Snowflake](https://blog.twitter.com/2010/announcing-snowflake).  

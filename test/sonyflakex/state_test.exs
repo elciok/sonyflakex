@@ -1,5 +1,6 @@
 defmodule Sonyflakex.StateTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
+  doctest Sonyflakex.State
 
   alias Sonyflakex.State
 
