@@ -2,7 +2,7 @@
 
 **TODO: Add installation instructions**
 
-**TODO: Configurattion options to set start_time and machine_id**
+**TODO: Configuration options to set start_time and machine_id**
 
 **TODO: Generate documentation**
 
@@ -46,8 +46,38 @@ Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_do
 and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
 be found at <https://hexdocs.pm/sonyflakex>.
 
-License
--------
+## Usage
+
+Add `Sonyflakex` as one of your application's root supervisor child in `application.ex`.
+
+```elixir
+defmodule MyApp do
+  use Application
+
+  @impl Application
+  def start(_type, _args) do
+    children = [
+      {Sonyflakex},
+      # other dependencies 
+    ]
+    Supervisor.start_link(children, strategy: :one_for_one)
+  end
+end
+```
+
+This configuration will register the default `Sonyflakex` GenServer using the module name and you can generate a new ID by using the following call.
+
+```elixir
+Sonyflakex.next_id()
+```
+
+## Limitations
+
+Like the reference implementation in Go, the default `Sonyflakex` GenServer will pause the process execution for a few milliseconds in case the sequence number in the 10 ms windows overflows. This behaviour prevents the generation of duplicated IDs. However, if you need to generate more than 2^8 IDs in a 10 ms window of time, it can create a performance bottleneck for your system.
+
+If you need to generate a higher volume of IDs in short periods of time, then you might need to run a pool of multiple `Sonyflakex` GenServers (each with a unique machine ID).
+
+## License
 
 The MIT License (MIT)
 
