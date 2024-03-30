@@ -23,8 +23,7 @@ you can run multiple Sonyflake ID generators concurrently.
 
 ## Installation
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `sonyflakex` to your list of dependencies in `mix.exs`:
+Add `sonyflakex` to your list of dependencies in `mix.exs`:
 
 ```elixir
 def deps do
@@ -34,7 +33,7 @@ def deps do
 end
 ```
 
-Then update your dependencies:
+Then update your dependencies with the following command:
 
 ```
 mix deps.get
