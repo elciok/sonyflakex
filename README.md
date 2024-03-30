@@ -1,11 +1,5 @@
 # Sonyflakex
 
-**TODO: Add installation instructions**
-
-**TODO: Configuration options to set start_time and machine_id**
-
-**TODO: Submit to hex.pm**
-
 Sonyflake is a distributed unique ID generator inspired by [Twitter's Snowflake](https://blog.twitter.com/2010/announcing-snowflake).  
 
 This is an Elixir implementation of the original [sony/sonyflake](https://github.com/sony/sonyflake), which is written in Go.
@@ -74,6 +68,13 @@ Sonyflakex.next_id()
 Like the reference implementation in Go, the default `Sonyflakex` GenServer will pause the process execution for a few milliseconds in case the sequence number in the 10 ms windows overflows. This behaviour prevents the generation of duplicated IDs. However, if you need to generate more than 2^8 IDs in a 10 ms window of time, it can create a performance bottleneck for your system.
 
 If you need to generate a higher volume of IDs in short periods of time, then you might need to run a pool of multiple `Sonyflakex` GenServers (each with a unique machine ID).
+
+## Pending
+
+- [ ] Submit to hex.pm
+- [ ] Update installation instructions
+- [ ] Configuration options to set start_time and machine_id
+
 
 ## License
 
