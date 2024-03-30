@@ -34,9 +34,11 @@ def deps do
 end
 ```
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at <https://hexdocs.pm/sonyflakex>.
+Then update your dependencies:
+
+```
+mix deps.get
+```
 
 ## Usage
 
@@ -49,7 +51,7 @@ defmodule MyApp do
   @impl Application
   def start(_type, _args) do
     children = [
-      {Sonyflakex},
+      Sonyflakex,
       # other dependencies 
     ]
     Supervisor.start_link(children, strategy: :one_for_one)
