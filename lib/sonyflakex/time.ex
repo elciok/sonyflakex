@@ -8,6 +8,16 @@ defmodule Sonyflakex.Time do
   # timestamp in unit of 10ms of 2014-09-01T00:00:00Z
   @default_epoch 140_952_960_000
 
+  @typedoc """
+  Timestamp in 10ms unit used in Sonyflake IDs.
+  """
+  @type sonyflake_timestamp() :: non_neg_integer()
+
+  @typedoc """
+  UNIX timestamp in ms.
+  """
+  @type unix_timestamp_ms() :: non_neg_integer()
+
   @doc ~S"""
   Converts DateTime to timestamp in unit of 10ms.
 
@@ -17,6 +27,7 @@ defmodule Sonyflakex.Time do
       160151040102
 
   """
+  @spec to_sonyflake_time(DateTime.t()) :: sonyflake_timestamp()
   def to_sonyflake_time(datetime) do
     datetime
     |> DateTime.to_unix(:nanosecond)
@@ -32,6 +43,7 @@ defmodule Sonyflakex.Time do
       140952960000
 
   """
+  @spec default_epoch() :: sonyflake_timestamp()
   def default_epoch(), do: @default_epoch
 
   @doc ~S"""
@@ -39,10 +51,12 @@ defmodule Sonyflakex.Time do
 
   Args:
     - `start_time`: Timestamp in unit of 10 ms used as reference.
-    - `utc_now`: (Optional) Function that returns current datetime
+    - `utc_now`: (Optional) Function that returns current DateTime
     using the same contract as DateTime.utc_now/0. It is used to
     mock datetime generation in tests.
   """
+  @spec current_elapsed_time(sonyflake_timestamp(), (-> DateTime.t())) ::
+          sonyflake_timestamp()
   def current_elapsed_time(start_time, utc_now \\ &DateTime.utc_now/0) do
     to_sonyflake_time(utc_now.()) - start_time
   end
@@ -70,6 +84,11 @@ defmodule Sonyflakex.Time do
       5
 
   """
+  @spec time_until_next_timestamp(
+          sonyflake_timestamp(),
+          sonyflake_timestamp(),
+          unix_timestamp_ms()
+        ) :: non_neg_integer()
   def time_until_next_timestamp(start_time, elapsed_time, current_time) do
     new_elapsed_time = elapsed_time + 1
 

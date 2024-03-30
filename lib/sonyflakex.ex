@@ -48,6 +48,7 @@ defmodule Sonyflakex do
 
   Returns: New integer ID.
   """
+  @spec next_id() :: State.sonyflake_id()
   def next_id() do
     GenServer.call(__MODULE__, :next_id)
   end

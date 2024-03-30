@@ -6,6 +6,8 @@ defmodule Sonyflakex.Generator do
   import Sonyflakex.Time
   import Sonyflakex.State
 
+  alias Sonyflakex.State
+
   @doc ~S"""
   Returns new ID based on current state.
 
@@ -22,6 +24,8 @@ defmodule Sonyflakex.Generator do
     the 8 bit field then it returns an error response.
 
   """
+  @spec next_id(State.t(), (-> DateTime.t())) ::
+          {:error, :overflow} | {:ok, State.sonyflake_id(), State.t()}
   def next_id(
         {start_time, elapsed_time, machine_id, _sequence} = state,
         utc_now \\ &DateTime.utc_now/0

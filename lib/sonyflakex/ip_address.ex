@@ -2,6 +2,12 @@ defmodule Sonyflakex.IpAddress do
   @moduledoc """
   Helpers to handle IP address calculations.
   """
+  alias Sonyflakex.IpAddress
+
+  @typedoc """
+  Tuple containing octets that represent a IP v4 network address.
+  """
+  @type t :: {non_neg_integer(), non_neg_integer(), non_neg_integer(), non_neg_integer()}
 
   @doc ~S"""
   Checks if tuple containing a IPv4 address
@@ -18,6 +24,7 @@ defmodule Sonyflakex.IpAddress do
       true
 
   """
+  @spec is_private_ipv4(IpAddress.t()) :: boolean()
   def is_private_ipv4({10, _, _, _} = _ip), do: true
   def is_private_ipv4({192, 168, _, _} = _ip), do: true
   def is_private_ipv4({172, x, _, _} = _ip) when x >= 16 and x < 32, do: true
@@ -36,7 +43,8 @@ defmodule Sonyflakex.IpAddress do
       346
 
   """
-
+  @spec first_private_ipv4((-> {:ok, [{IpAddress.t(), any(), any()}]})) ::
+          IpAddress.t()
   def first_private_ipv4(list_ips_func \\ &:inet.getif/0) do
     {:ok, addresses} = list_ips_func.()
 
@@ -63,6 +71,7 @@ defmodule Sonyflakex.IpAddress do
       346
 
   """
+  @spec lower_16_bit_ip_address(IpAddress.t()) :: non_neg_integer()
   def lower_16_bit_ip_address({_, _, b3, b4} = _ip) do
     <<result::integer-size(2)-unit(8)>> = <<b3::8, b4::8>>
     result
