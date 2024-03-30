@@ -73,10 +73,8 @@ If you need to generate a higher volume of IDs in short periods of time, then yo
 
 ## Pending
 
-- [ ] Submit to hex.pm
-- [ ] Update installation instructions
-- [ ] Configuration options to set start_time and machine_id
-
+- [ ] Configuration options to set start_time and machine_id.
+- [ ] Callback to check machine ID is unique.
 
 ## License
 
