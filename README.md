@@ -28,7 +28,7 @@ Add `sonyflakex` to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:sonyflakex, "~> 0.1.0"}
+    {:sonyflakex, "~> 0.2.0"}
   ]
 end
 ```
@@ -72,7 +72,6 @@ If you need to generate a higher volume of IDs in short periods of time, then yo
 
 ## Pending
 
-- [ ] Configuration options to set start_time and machine_id.
 - [ ] Callback to check machine ID is unique.
 
 ## License

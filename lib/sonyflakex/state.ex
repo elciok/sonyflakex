@@ -7,11 +7,16 @@ defmodule Sonyflakex.State do
   import Sonyflakex.Time
   import Sonyflakex.IpAddress
 
+  alias Sonyflakex.Config
+
   @bits_time 39
   @bits_sequence 8
   @bits_machine_id 16
 
   @mask_sequence (1 <<< @bits_sequence) - 1
+
+  @option_start_time :start_time
+  @option_machine_id :machine_id
 
   @typedoc """
   Represents internal ID generator state used to compute the next ID.
@@ -44,13 +49,32 @@ defmodule Sonyflakex.State do
     machine this field will be set to the same value and duplicated
     IDs might be generated.
   """
-  @spec new() :: t()
-  def new() do
-    # TODO: allow user to customize start_time, machine_id and checking machine_id uniqueness
-    start_time = default_epoch()
-    machine_id = lower_16_bit_ip_address(first_private_ipv4())
-    sequence = (1 <<< @bits_sequence) - 1
-    create_state(start_time, 0, machine_id, sequence)
+  @spec new(keyword()) :: {:ok, t()} | {:error, any()}
+  def new(opts) do
+    case validate_opts(opts) do
+      {:ok, opts} ->
+        start_time = Keyword.fetch!(opts, @option_start_time)
+        machine_id = Keyword.fetch!(opts, @option_machine_id)
+        sequence = (1 <<< @bits_sequence) - 1
+        {:ok, create_state(start_time, 0, machine_id, sequence)}
+
+      error ->
+        error
+    end
+  end
+
+  defp validate_opts(opts) do
+    with {:ok, opts} <- Config.set_default(opts, @option_start_time, &default_epoch/0),
+         {:ok, opts} <- Config.validate_is_integer(opts, @option_start_time),
+         {:ok, opts} <-
+           Config.set_default(opts, @option_machine_id, fn ->
+             lower_16_bit_ip_address(first_private_ipv4())
+           end),
+         {:ok, opts} <- Config.validate_is_integer(opts, @option_machine_id),
+         {:ok, opts} <-
+           Config.validate_bit_option_length(opts, @option_machine_id, @bits_machine_id) do
+      {:ok, opts}
+    end
   end
 
   @doc ~S"""
