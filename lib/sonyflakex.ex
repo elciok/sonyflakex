@@ -6,7 +6,42 @@ defmodule Sonyflakex do
 
   alias Sonyflakex.{State, Generator, Time}
 
-  def start_link(args) do
+  @doc """
+  Starts GenServer process that generates
+  Sonyflake IDs.
+
+  Options:
+    - start_time: UNIX timestamp used as starting point
+        for other timestamps used to compose IDs
+    - machine_id: integer that identifies the machine
+        generating IDs. It is also part of the ID
+        so it should fit in 16 bits.
+
+  Returns:
+    - `{:ok, pid}`: In case process is started successfully, it returns a tuple containing an ID.
+    - `{:error, error_detail}`: If the process can't be started due to invalid configuration options
+      it will return an error tuple containing details about the validation error.
+
+  An example of setting configuration options in an application:application:
+
+  ```elixir
+  defmodule MyApp do
+    use Application
+
+    @impl Application
+    def start(_type, _args) do
+      children = [
+        {Sonyflakex, machine_id: 33, start_time: 1712269128},
+        # other dependencies
+      ]
+      Supervisor.start_link(children, strategy: :one_for_one)
+    end
+  end
+  ```
+
+  """
+  @spec start_link(keyword()) :: :ignore | {:error, any()} | {:ok, pid()}
+  def start_link(args \\ []) do
     GenServer.start_link(
       __MODULE__,
       args,
@@ -15,8 +50,8 @@ defmodule Sonyflakex do
   end
 
   @impl GenServer
-  def init(_args) do
-    {:ok, State.new()}
+  def init(opts) do
+    State.new(opts)
   end
 
   @impl GenServer
