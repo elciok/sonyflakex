@@ -13,9 +13,13 @@ defmodule Sonyflakex do
   Options:
     - start_time: UNIX timestamp used as starting point
         for other timestamps used to compose IDs
-    - machine_id: integer that identifies the machine
+    - machine_id: Integer that identifies the machine
         generating IDs. It is also part of the ID
         so it should fit in 16 bits.
+    - check_machine_id: Callback function to validate
+        the uniqueness of the machine ID. If check_machine_id
+        returns false, Sonyflakex process is not started. If
+        check_machine_id is nil, no validation is done.
 
   Returns:
     - `{:ok, pid}`: In case process is started successfully, it returns a tuple containing an ID.
@@ -38,7 +42,13 @@ defmodule Sonyflakex do
     end
   end
   ```
+  In case of machine ID customization you can use a `check_machine_id` function
+  reference that receives machine IDs and returns true if the machine ID is unique.
+  Since machine ID is part of the ID generated, it should be unique for each set
+  of generators, otherwise collisions (repeated IDs) might be generated.
 
+  You should only customize machine_id if the default value used (lower 16 bits
+  of the first private IP v4 address) won't work for your case.
   """
   @spec start_link(keyword()) :: :ignore | {:error, any()} | {:ok, pid()}
   def start_link(args \\ []) do

@@ -28,7 +28,7 @@ Add `sonyflakex` to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:sonyflakex, "~> 0.2.0"}
+    {:sonyflakex, "~> 0.3.0"}
   ]
 end
 ```
@@ -69,10 +69,6 @@ Sonyflakex.next_id()
 Like the reference implementation in Go, the default `Sonyflakex` GenServer will pause the process execution for a few milliseconds in case the sequence number in the 10 ms windows overflows. This behaviour prevents the generation of duplicated IDs. However, if you need to generate more than 2^8 IDs in a 10 ms window of time, it can create a performance bottleneck for your system.
 
 If you need to generate a higher volume of IDs in short periods of time, then you might need to run a pool of multiple `Sonyflakex` GenServers (each with a unique machine ID).
-
-## Pending
-
-- [ ] Callback to check machine ID is unique.
 
 ## License
 

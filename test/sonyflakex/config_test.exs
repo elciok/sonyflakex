@@ -53,4 +53,69 @@ defmodule Sonyflakex.ConfigTest do
       assert which == {:value_too_big, :age, 42}
     end
   end
+
+  describe "validate_is_function/3" do
+    test "returns ok if no option set" do
+      {:ok, _opts} = Config.validate_is_function([age: 42], :check_function, 2)
+    end
+
+    test "returns ok if option is set with function reference with correct arity" do
+      check_function = fn _, _ -> true end
+
+      {:ok, opts} =
+        Config.validate_is_function([check_function: check_function], :check_function, 2)
+
+      assert {:ok, ^check_function} = Keyword.fetch(opts, :check_function)
+    end
+
+    test "returns error if option is set with function reference with wrong arity" do
+      check_function = fn _, _ -> true end
+
+      {:error, which} =
+        Config.validate_is_function([check_function: check_function], :check_function, 100)
+
+      assert which == {:wrong_function_arity, :check_function, check_function}
+    end
+
+    test "returns error if option set is not a function reference" do
+      {:error, which} =
+        Config.validate_is_function([check_function: 1234], :check_function, 1)
+
+      assert which == {:non_function, :check_function, 1234}
+    end
+  end
+
+  describe "validate_machine_id/3" do
+    test "returns ok if check_machine_id option is not set" do
+      {:ok, _opts} = Config.validate_machine_id([age: 42], :check_machine_id, :machine_id)
+    end
+
+    test "returns ok if check_machine_id(machine_id) returns true" do
+      check_function = fn machine_id ->
+        if machine_id == 1, do: true, else: false
+      end
+
+      {:ok, _opts} =
+        Config.validate_machine_id(
+          [check_machine_id: check_function, machine_id: 1],
+          :check_machine_id,
+          :machine_id
+        )
+    end
+
+    test "returns error if check_machine_id(machine_id) returns true" do
+      check_function = fn machine_id ->
+        if machine_id == 1, do: true, else: false
+      end
+
+      {:error, which} =
+        Config.validate_machine_id(
+          [check_machine_id: check_function, machine_id: 2],
+          :check_machine_id,
+          :machine_id
+        )
+
+      assert which == {:machine_id_not_unique, 2}
+    end
+  end
 end
