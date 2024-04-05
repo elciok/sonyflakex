@@ -70,10 +70,6 @@ Like the reference implementation in Go, the default `Sonyflakex` GenServer will
 
 If you need to generate a higher volume of IDs in short periods of time, then you might need to run a pool of multiple `Sonyflakex` GenServers (each with a unique machine ID).
 
-## Pending
-
-- [ ] Callback to check machine ID is unique.
-
 ## License
 
 The MIT License (MIT)
