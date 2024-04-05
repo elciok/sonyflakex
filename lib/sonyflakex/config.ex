@@ -82,4 +82,28 @@ defmodule Sonyflakex.Config do
     <<max::integer-size(length_bits + 1)>> = <<1::size(1), 0::size(length_bits)>>
     value < max
   end
+
+  @doc """
+  Validates option value is a function reference with input arity.
+  This is checked only if value is set.
+  """
+  @spec validate_is_function(keyword(), atom(), non_neg_integer()) ::
+          {:error, {:non_function, atom(), any()}}
+          | {:error, {:wrong_function_arity, atom(), any()}}
+          | {:ok, keyword()}
+  def validate_is_function(opts, option_name, arity) do
+    case Keyword.fetch(opts, option_name) do
+      {:ok, value} when is_function(value, arity) ->
+        {:ok, opts}
+
+      {:ok, value} when is_function(value) ->
+        {:error, {:wrong_function_arity, option_name, value}}
+
+      {:ok, value} ->
+        {:error, {:non_function, option_name, value}}
+
+      :error ->
+        {:ok, opts}
+    end
+  end
 end

@@ -13,9 +13,13 @@ defmodule Sonyflakex do
   Options:
     - start_time: UNIX timestamp used as starting point
         for other timestamps used to compose IDs
-    - machine_id: integer that identifies the machine
+    - machine_id: Integer that identifies the machine
         generating IDs. It is also part of the ID
         so it should fit in 16 bits.
+    - check_machine_id: Callback function to validate
+        the uniqueness of the machine ID. If check_machine_id
+        returns false, Sonyflakex process is not started. If
+        check_machine_id is nil, no validation is done.
 
   Returns:
     - `{:ok, pid}`: In case process is started successfully, it returns a tuple containing an ID.
