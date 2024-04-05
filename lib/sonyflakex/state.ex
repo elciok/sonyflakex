@@ -41,14 +41,27 @@ defmodule Sonyflakex.State do
   Initializes ID generator state.
 
   This method should be used by clients to create the initial state for
-  the ID generator with the following default configuration:
+  the ID generator with the following configuration.
 
-    - *Start time*: '2014-09-01T00:00:00Z' is used when calculating
-    elapsed time for timestamps in state.
-    - *Machine ID*: Lower 16 bits of one of the machine's private
+    Options (all optional):
+    - start_time: UNIX timestamp used as starting point
+        for other timestamps used to compose IDs
+    - machine_id: Integer that identifies the machine
+        generating IDs. It is also part of the ID
+        so it should fit in 16 bits.
+    - check_machine_id: Callback function to validate
+        the uniqueness of the machine ID. If check_machine_id
+        returns false, Sonyflakex process is not started. If
+        check_machine_id is nil, no validation is done.
+
+  When not set, these will be the ddefault values for options
+  used by the Sonyflake generator:
+    - start_time: '2014-09-01T00:00:00Z'.
+    - machine_id: Lower 16 bits of one of the machine's private
     IP addresses. If you run multiple generators in the same
     machine this field will be set to the same value and duplicated
     IDs might be generated.
+    - check_machine_id: `nil`
   """
   @spec new(keyword()) :: {:ok, t()} | {:error, any()}
   def new(opts) do

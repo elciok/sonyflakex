@@ -42,7 +42,13 @@ defmodule Sonyflakex do
     end
   end
   ```
+  In case of machine ID customization you can use a `check_machine_id` function
+  reference that receives machine IDs and returns true if the machine ID is unique.
+  Since machine ID is part of the ID generated, it should be unique for each set
+  of generators, otherwise collisions (repeated IDs) might be generated.
 
+  You should only customize machine_id if the default value used (lower 16 bits
+  of the first private IP v4 address) won't work for your case.
   """
   @spec start_link(keyword()) :: :ignore | {:error, any()} | {:ok, pid()}
   def start_link(args \\ []) do
