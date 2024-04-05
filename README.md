@@ -28,7 +28,7 @@ Add `sonyflakex` to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:sonyflakex, "~> 0.2.0"}
+    {:sonyflakex, "~> 0.3.0"}
   ]
 end
 ```
