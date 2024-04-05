@@ -84,4 +84,38 @@ defmodule Sonyflakex.ConfigTest do
       assert which == {:non_function, :check_function, 1234}
     end
   end
+
+  describe "validate_machine_id/3" do
+    test "returns ok if check_machine_id option is not set" do
+      {:ok, _opts} = Config.validate_machine_id([age: 42], :check_machine_id, :machine_id)
+    end
+
+    test "returns ok if check_machine_id(machine_id) returns true" do
+      check_function = fn machine_id ->
+        if machine_id == 1, do: true, else: false
+      end
+
+      {:ok, _opts} =
+        Config.validate_machine_id(
+          [check_machine_id: check_function, machine_id: 1],
+          :check_machine_id,
+          :machine_id
+        )
+    end
+
+    test "returns error if check_machine_id(machine_id) returns true" do
+      check_function = fn machine_id ->
+        if machine_id == 1, do: true, else: false
+      end
+
+      {:error, which} =
+        Config.validate_machine_id(
+          [check_machine_id: check_function, machine_id: 2],
+          :check_machine_id,
+          :machine_id
+        )
+
+      assert which == {:machine_id_not_unique, 2}
+    end
+  end
 end

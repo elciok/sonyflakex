@@ -106,4 +106,27 @@ defmodule Sonyflakex.Config do
         {:ok, opts}
     end
   end
+
+  @doc """
+  Validates machine ID value using check_machine_id function if option is set.
+  Returns validation error if check_machine_id returns false.
+  """
+  @spec validate_machine_id(keyword(), atom(), atom()) ::
+          {:error, {:machine_id_not_unique, integer()}}
+          | {:ok, keyword()}
+  def validate_machine_id(opts, check_machine_id_option, machine_id_option) do
+    case Keyword.fetch(opts, check_machine_id_option) do
+      {:ok, check_machine_id} ->
+        machine_id = Keyword.fetch!(opts, machine_id_option)
+
+        if check_machine_id.(machine_id) do
+          {:ok, opts}
+        else
+          {:error, {:machine_id_not_unique, machine_id}}
+        end
+
+      :error ->
+        {:ok, opts}
+    end
+  end
 end

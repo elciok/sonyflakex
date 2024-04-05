@@ -17,6 +17,7 @@ defmodule Sonyflakex.State do
 
   @option_start_time :start_time
   @option_machine_id :machine_id
+  @option_check_machine_id :check_machine_id
 
   @typedoc """
   Represents internal ID generator state used to compute the next ID.
@@ -72,7 +73,10 @@ defmodule Sonyflakex.State do
            end),
          {:ok, opts} <- Config.validate_is_integer(opts, @option_machine_id),
          {:ok, opts} <-
-           Config.validate_bit_option_length(opts, @option_machine_id, @bits_machine_id) do
+           Config.validate_bit_option_length(opts, @option_machine_id, @bits_machine_id),
+         {:ok, opts} <- Config.validate_is_function(opts, @option_check_machine_id, 1),
+         {:ok, opts} <-
+           Config.validate_machine_id(opts, @option_check_machine_id, @option_machine_id) do
       {:ok, opts}
     end
   end
